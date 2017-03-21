@@ -11,9 +11,11 @@ import android.widget.Toast;
 
 import com.duongnx.mvp.R;
 import com.duongnx.mvp.data.Task;
+import com.duongnx.mvp.ui.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by duongnx on 3/21/2017.
@@ -22,6 +24,8 @@ import butterknife.ButterKnife;
 public class FrgAddEditTask extends Fragment implements AddEditTaskContract.View {
     private AddEditTaskContract.Presenter mPresenter;
     private String mTaskId = null;
+    private Unbinder unbinder;
+
     @BindView(R.id.etTitle)
     EditText etTitle;
     @BindView(R.id.etDescription)
@@ -31,7 +35,7 @@ public class FrgAddEditTask extends Fragment implements AddEditTaskContract.View
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mRootView = inflater.inflate(R.layout.frg_addedittask, container, false);
-        ButterKnife.bind(this, mRootView);
+        unbinder = ButterKnife.bind(this, mRootView);
         return mRootView;
     }
 
@@ -39,6 +43,12 @@ public class FrgAddEditTask extends Fragment implements AddEditTaskContract.View
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mPresenter = new AddEditTaskPresenter(mTaskId, this);
+        ((MainActivity) getActivity()).getFloatButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.saveTask(etTitle.getText().toString(), etDescription.getText().toString());
+            }
+        });
     }
 
     @Override
@@ -54,5 +64,11 @@ public class FrgAddEditTask extends Fragment implements AddEditTaskContract.View
             etTitle.setText(task.getTitle());
             etDescription.setText(task.getDescription());
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 }

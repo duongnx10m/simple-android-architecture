@@ -18,24 +18,24 @@ import android.view.MenuItem;
 import com.duongnx.mvp.R;
 import com.duongnx.mvp.ui.addedittask.FrgAddEditTask;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private Fragment mCurrentFragment;
+    @BindView(R.id.fab)
+    FloatingActionButton floatButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -49,11 +49,15 @@ public class MainActivity extends AppCompatActivity
         replaceFragment(new FrgAddEditTask());
     }
 
+    public FloatingActionButton getFloatButton() {
+        return floatButton;
+    }
 
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frContent, fragment);
         fragmentTransaction.commit();
+        mCurrentFragment = fragment;
     }
 
     @Override
