@@ -16,7 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.duongnx.mvp.R;
+import com.duongnx.mvp.data.Task;
+import com.duongnx.mvp.data.TasksRepsosity;
 import com.duongnx.mvp.ui.addedittask.FrgAddEditTask;
+import com.duongnx.mvp.ui.tasks.FrgTasks;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +49,17 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        replaceFragment(new FrgAddEditTask());
+        for (int i = 0; i < 10; i++) {
+            TasksRepsosity.getInstance().add(new Task("duongnx " + i, "hello " + i));
+        }
+        replaceFragment(new FrgTasks());
+    }
+
+    @OnClick(R.id.fab)
+    public void onFloatButtonClicked() {
+        if (mCurrentFragment != null && mCurrentFragment instanceof FrgBase) {
+            ((FrgBase) mCurrentFragment).onFloatButtonClicked();
+        }
     }
 
     public FloatingActionButton getFloatButton() {
@@ -56,6 +69,7 @@ public class MainActivity extends AppCompatActivity
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frContent, fragment);
+        fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
         fragmentTransaction.commit();
         mCurrentFragment = fragment;
     }

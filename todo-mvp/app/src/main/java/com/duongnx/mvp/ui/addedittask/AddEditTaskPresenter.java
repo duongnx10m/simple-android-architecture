@@ -19,7 +19,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     @Override
     public void loadTask(String taskId) {
         if (mView != null)
-            mView.onLoadTaskComplete(TasksRepsosity.getInstance().getTask(taskId));
+            mView.onLoadTaskComplete(TasksRepsosity.getInstance().get(taskId));
     }
 
     @Override

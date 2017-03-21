@@ -52,7 +52,7 @@ public class TasksRepsosity {
         }
     }
 
-    public Task getTask(@NonNull String taskId) {
+    public Task get(@NonNull String taskId) {
         checkNotNull(taskId);
         for (Task task : tasks) {
             if (task.getId() == taskId) {
@@ -60,6 +60,10 @@ public class TasksRepsosity {
             }
         }
         return null;
+    }
+
+    public ArrayList<Task> getAll() {
+        return tasks;
     }
 
     public void clear() {

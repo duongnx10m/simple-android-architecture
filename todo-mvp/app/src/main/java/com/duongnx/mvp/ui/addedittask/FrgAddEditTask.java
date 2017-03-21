@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.duongnx.mvp.R;
 import com.duongnx.mvp.data.Task;
+import com.duongnx.mvp.ui.FrgBase;
 import com.duongnx.mvp.ui.MainActivity;
 
 import butterknife.BindView;
@@ -21,7 +22,7 @@ import butterknife.Unbinder;
  * Created by duongnx on 3/21/2017.
  */
 
-public class FrgAddEditTask extends Fragment implements AddEditTaskContract.View {
+public class FrgAddEditTask extends FrgBase implements AddEditTaskContract.View {
     private AddEditTaskContract.Presenter mPresenter;
     private String mTaskId = null;
     private Unbinder unbinder;
@@ -43,12 +44,12 @@ public class FrgAddEditTask extends Fragment implements AddEditTaskContract.View
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mPresenter = new AddEditTaskPresenter(mTaskId, this);
-        ((MainActivity) getActivity()).getFloatButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.saveTask(etTitle.getText().toString(), etDescription.getText().toString());
-            }
-        });
+
+    }
+
+    @Override
+    public void onFloatButtonClicked() {
+        mPresenter.saveTask(etTitle.getText().toString(), etDescription.getText().toString());
     }
 
     @Override
