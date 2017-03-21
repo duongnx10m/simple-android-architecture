@@ -1,4 +1,4 @@
-package com.duongnx.mvp;
+package com.duongnx.mvp.ui;
 
 /**
  * Created by duongnx on 3/21/2017.
