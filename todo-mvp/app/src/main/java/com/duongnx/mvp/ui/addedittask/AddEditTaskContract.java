@@ -15,7 +15,7 @@ public interface AddEditTaskContract {
         void saveTask(String title, String description);
     }
 
-    interface View extends BaseView<Presenter> {
+    interface View extends BaseView {
         void onSaveTaskComplete();
 
         void onLoadTaskComplete(Task task);
