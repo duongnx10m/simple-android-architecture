@@ -13,6 +13,7 @@ import com.duongnx.mvp.R;
 import com.duongnx.mvp.data.Task;
 import com.duongnx.mvp.ui.FrgBase;
 import com.duongnx.mvp.ui.MainActivity;
+import com.duongnx.mvp.utils.Logger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +26,6 @@ import butterknife.Unbinder;
 public class FrgAddEditTask extends FrgBase implements AddEditTaskContract.View {
     private AddEditTaskContract.Presenter mPresenter;
     private String mTaskId = null;
-    private Unbinder unbinder;
 
     @BindView(R.id.etTitle)
     EditText etTitle;
@@ -49,7 +49,9 @@ public class FrgAddEditTask extends FrgBase implements AddEditTaskContract.View 
 
     @Override
     public void onFloatButtonClicked() {
-        mPresenter.saveTask(etTitle.getText().toString(), etDescription.getText().toString());
+        Logger.d(getClass().getSimpleName() + ":onFloatButtonClicked");
+        if (mPresenter != null && etTitle != null)
+            mPresenter.saveTask(etTitle.getText().toString(), etDescription.getText().toString());
     }
 
     @Override
@@ -67,9 +69,4 @@ public class FrgAddEditTask extends FrgBase implements AddEditTaskContract.View 
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
-    }
 }

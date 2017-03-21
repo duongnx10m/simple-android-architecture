@@ -66,6 +66,7 @@ public class FrgTasks extends FrgBase implements TasksContract.View {
 
     @Override
     public void onFloatButtonClicked() {
+        Logger.d(getClass().getSimpleName() + ":onFloatButtonClicked");
         mActivity.replaceFragment(new FrgAddEditTask());
     }
 
