@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.duongnx.mvp.Defines;
 import com.duongnx.mvp.R;
 import com.duongnx.mvp.data.Task;
 import com.duongnx.mvp.ui.FrgBase;
 import com.duongnx.mvp.ui.MainActivity;
 import com.duongnx.mvp.utils.Logger;
+import com.duongnx.mvp.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,21 +46,23 @@ public class FrgAddEditTask extends FrgBase implements AddEditTaskContract.View 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mPresenter = new AddEditTaskPresenter(mTaskId, this);
-
+        if (getArguments() != null) {
+            mTaskId = getArguments().getString(Defines.KEY_TASK_ID, null);
+            mPresenter.loadTask(mTaskId);
+        }
     }
 
     @Override
     public void onFloatButtonClicked() {
         Logger.d(getClass().getSimpleName() + ":onFloatButtonClicked");
-        if (mPresenter != null && etTitle != null)
+        if (mPresenter != null)
             mPresenter.saveTask(etTitle.getText().toString(), etDescription.getText().toString());
     }
 
     @Override
     public void onSaveTaskComplete() {
         Toast.makeText(getActivity(), "onSaveTaskComplete", Toast.LENGTH_SHORT).show();
-        etTitle.getText().clear();
-        etDescription.getText().clear();
+        mActivity.getSupportFragmentManager().popBackStack();
     }
 
     @Override

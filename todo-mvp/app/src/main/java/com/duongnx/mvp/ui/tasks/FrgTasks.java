@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.duongnx.mvp.Defines;
 import com.duongnx.mvp.R;
 import com.duongnx.mvp.adapter.AdapterTasks;
 import com.duongnx.mvp.data.Task;
@@ -26,7 +27,7 @@ import butterknife.ButterKnife;
  * Created by duongnx on 3/21/2017.
  */
 
-public class FrgTasks extends FrgBase implements TasksContract.View {
+public class FrgTasks extends FrgBase implements TasksContract.View, AdapterTasks.OnRecyclerViewClickListener {
 
     private TasksContract.Presenter mPresenter;
     private AdapterTasks mAdapter;
@@ -58,7 +59,7 @@ public class FrgTasks extends FrgBase implements TasksContract.View {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mActivity);
         recyclerView.setLayoutManager(layoutManager);
         if (mAdapter == null) {
-            mAdapter = new AdapterTasks(mActivity);
+            mAdapter = new AdapterTasks(mActivity, this);
         }
         recyclerView.setAdapter(mAdapter);
         mPresenter.loadTasks();
@@ -66,7 +67,6 @@ public class FrgTasks extends FrgBase implements TasksContract.View {
 
     @Override
     public void onFloatButtonClicked() {
-        Logger.d(getClass().getSimpleName() + ":onFloatButtonClicked");
         mActivity.replaceFragment(new FrgAddEditTask());
     }
 
@@ -83,5 +83,17 @@ public class FrgTasks extends FrgBase implements TasksContract.View {
         swipeRefreshLayout.setRefreshing(false);
     }
 
-
+    @Override
+    public void onRecyclerViewClicked(int position) {
+        if (mAdapter.getTasks() != null && position < mAdapter.getItemCount()) {
+            Task task = mAdapter.getTasks().get(position);
+            if (task != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Defines.KEY_TASK_ID, task.getId());
+                FrgAddEditTask frgAddEditTask = new FrgAddEditTask();
+                frgAddEditTask.setArguments(bundle);
+                mActivity.replaceFragment(frgAddEditTask);
+            }
+        }
+    }
 }

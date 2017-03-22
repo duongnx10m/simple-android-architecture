@@ -22,13 +22,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by duongnx on 3/21/2017.
  */
 
-public class AdapterTasks extends RecyclerView.Adapter<AdapterTasks.VhTask> {
+public class AdapterTasks extends RecyclerView.Adapter<AdapterTasks.VhTask> implements View.OnClickListener {
+
+    public interface OnRecyclerViewClickListener {
+        void onRecyclerViewClicked(int position);
+    }
 
     private List<Task> tasks;
     private Context mContext;
+    private OnRecyclerViewClickListener listener;
 
-    public AdapterTasks(Context context) {
+    public AdapterTasks(Context context, OnRecyclerViewClickListener listener) {
         this.mContext = context;
+        this.listener = listener;
     }
 
     public void setTasks(@NonNull List<Task> tasks) {
@@ -38,12 +44,13 @@ public class AdapterTasks extends RecyclerView.Adapter<AdapterTasks.VhTask> {
     @Override
     public VhTask onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.adapter_item_task, parent, false);
-
+        view.setOnClickListener(this);
         return new VhTask(view);
     }
 
     @Override
     public void onBindViewHolder(VhTask holder, int position) {
+        holder.itemView.setTag(position);
         holder.setData(tasks.get(position));
     }
 
@@ -52,6 +59,16 @@ public class AdapterTasks extends RecyclerView.Adapter<AdapterTasks.VhTask> {
         if (tasks == null)
             return 0;
         else return tasks.size();
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (listener != null)
+            listener.onRecyclerViewClicked((Integer) v.getTag());
     }
 
     public class VhTask extends RecyclerView.ViewHolder {
