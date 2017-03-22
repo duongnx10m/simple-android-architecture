@@ -3,6 +3,11 @@ package com.duongnx.mvp.ui.addedittask;
 import com.duongnx.mvp.data.Task;
 import com.duongnx.mvp.data.TasksRepsosity;
 
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+
 /**
  * Created by duongnx on 3/21/2017.
  */
@@ -18,8 +23,16 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
 
     @Override
     public void loadTask(String taskId) {
-        if (mView != null)
-            mView.onLoadTaskComplete(TasksRepsosity.getInstance().get(taskId));
+        TasksRepsosity.getInstance()
+                .getTask(taskId)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(task -> {
+                    mView.onLoadTaskComplete(task);
+                }, throwable -> {
+                    mView.onLoadTaskComplete(null);
+                });
+
     }
 
     @Override

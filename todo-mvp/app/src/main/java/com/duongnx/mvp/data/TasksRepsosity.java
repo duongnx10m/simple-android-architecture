@@ -3,6 +3,9 @@ package com.duongnx.mvp.data;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import rx.Observable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -10,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by duongnx on 3/21/2017.
  */
 
-public class TasksRepsosity {
+public class TasksRepsosity implements RxTaskDataSource {
     private static TasksRepsosity instance;
     private ArrayList<Task> tasks = new ArrayList<>();
 
@@ -52,7 +55,7 @@ public class TasksRepsosity {
         }
     }
 
-    public Task get(@NonNull String taskId) {
+    private Task getTaskWithId(@NonNull String taskId) {
         checkNotNull(taskId);
         for (Task task : tasks) {
             if (task.getId() == taskId) {
@@ -62,11 +65,22 @@ public class TasksRepsosity {
         return null;
     }
 
-    public ArrayList<Task> getAll() {
-        return tasks;
-    }
 
     public void clear() {
         tasks.clear();
+    }
+
+    @Override
+    public Observable<Task> getTask(String taskId) {
+        Task task = getTaskWithId(taskId);
+        if (task != null)
+            return Observable.just(task);
+        else
+            return null;
+    }
+
+    @Override
+    public Observable<List<Task>> getTasks() {
+        return Observable.from(tasks).toList();
     }
 }
